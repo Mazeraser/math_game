@@ -7,7 +7,7 @@ public class numGenerator : MonoBehaviour, IGenerator
 
     public delegate void num_generated(int num);
     public static event num_generated num_generated_event;
-    public delegate void answer_checked();
+    public delegate void answer_checked(bool ans);
     public static event answer_checked answer_checked_event;
 
     private int sol;
@@ -27,17 +27,10 @@ public class numGenerator : MonoBehaviour, IGenerator
     }
     private void check_answer(int ans)
     {
-        if(sol==ans)
-        {
-            Debug.Log("Right!:)");
-        }
-        else
-            Debug.Log("Wrong!>:(");
-        answer_checked_event?.Invoke();
+       answer_checked_event?.Invoke(sol==ans);
     }
     private void check_answer()
     {
-        Debug.Log("Wrong!>:(");
-        answer_checked_event?.Invoke();
+        answer_checked_event?.Invoke(false);
     }
 }

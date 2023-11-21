@@ -31,7 +31,7 @@ public abstract class Person : MonoBehaviour, ILife, IPerson
     }
     public void take_damage(int damage)
     {
-        this.HP=hp-Mathf.Clamp(damage-this.Armory,0,hp);
+        this.HP=hp-Mathf.Clamp(damage-this.Armory,1,hp);
     }
     //IPerson
     [SerializeField]private int dp;
