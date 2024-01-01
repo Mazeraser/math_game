@@ -12,11 +12,22 @@ public class numGenerator : MonoBehaviour, IGenerator
 
     private int sol;
 
+    public void create(int min,int addit, GameObject boss)
+    {
+        max_range = min+addit;
+    }
+    
     private void Awake()
     {
         GameManager.OnUserRequestEvent += Generate;
         UIController.solution_entered_event += check_answer;
         GameManager.TimerEndEvent += check_answer;
+    }
+    private void OnDestroy()
+    {
+        GameManager.OnUserRequestEvent -= Generate;
+        UIController.solution_entered_event -= check_answer;
+        GameManager.TimerEndEvent -= check_answer;
     }
 
     public void Generate(int num)

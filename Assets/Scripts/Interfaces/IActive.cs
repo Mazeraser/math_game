@@ -1,4 +1,5 @@
 public interface IActive
 {
-    void find_target(bool ans);
+    //Отвечает за активность персонажа
+    void find_target(bool ans); 
 }

@@ -3,16 +3,28 @@ using UnityEngine;
 
 public class exampleGenerator : MonoBehaviour, IGenerator
 {
-
-    [SerializeField]private int max_range;
+    [Tooltip("Максимальная длина примера")]private int max_range;
     public int Max_Range{get{return max_range;}}
 
     public delegate void example_generated(string example);
     public static event example_generated example_generated_event;
 
+    public delegate void subscribed();
+    public static event subscribed SubscribedEvent;
+
+    public void create(int max_ex_range)
+    {
+        max_range=max_ex_range;
+    }
+
     private void Awake()
     {
         numGenerator.num_generated_event+=Generate;
+        SubscribedEvent?.Invoke();
+    }
+    private void OnDestroy()
+    {
+        numGenerator.num_generated_event-=Generate;
     }
 
     private int[] find_dividers(int num)

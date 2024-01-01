@@ -1,19 +1,19 @@
 using UnityEngine;
 
-public class Player : Person, IActive
+public class Player : Person
 {
-    private void Awake()
-    {
-        numGenerator.answer_checked_event += find_target;
-    }
+    public Player(int _hp, int _arm, int _dp):base(_hp,_arm,_dp){}
 
-    public void find_target(bool ans)
+    public override void find_target(bool ans)
     {
         if(ans)
         {
             Debug.Log("Right!:)");
             Person? target = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Person>();
-            this.attack(target.GetComponent<ILife>());
+            if(target!=null)
+                this.attack(target.GetComponent<ILife>());
+            else
+                Debug.Log("where...");
         }
     }
 }
