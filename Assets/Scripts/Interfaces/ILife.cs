@@ -4,7 +4,9 @@ public interface ILife
    int HP{get;set;}
    int Max_HP{get;}
    int Armory{get;}
+   int Cost{get;}
 
    void die();
    void take_damage(int damage);
+   void heal(int heal_points);
 }

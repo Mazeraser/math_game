@@ -69,10 +69,14 @@ public class MenuController : MonoBehaviour
         {
             total_balance.text = "Total balance points: "+manager.Balance_Points.ToString();
             curr_balance.text = "Balance points remain: "+(manager.Balance_Points-manager.player_chars.Sum()).ToString();
-            if(manager.Balance_Points==manager.player_chars.Sum())
+            if(manager.Balance_Points==manager.player_chars.Sum()||manager.Balance_Points<=GameManager.MIN_BALANCE)
             {
                 min[3].SetActive(false);
                 max[3].SetActive(true);
+            }
+            else if(manager.Balance_Points>=GameManager.MAX_BALANCE){
+                min[3].SetActive(true);
+                max[3].SetActive(false);
             }
             else
             {

@@ -684,8 +684,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c3868a90d580ae4e8883762d62870a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deactivate_val: 2
-  parent_text: {fileID: 241540485}
 --- !u!1 &117456102
 GameObject:
   m_ObjectHideFlags: 0
@@ -6556,6 +6554,10 @@ MonoBehaviour:
   decide_time: 0
   balance_points: 10
   player_chars: 
+  accs_mods:
+  - {fileID: 11400000, guid: 4c2036712f14f2849b19287b47b787ae, type: 2}
+  - {fileID: 11400000, guid: 9c9b2f185081451469c19ddb94d3dc56, type: 2}
+  stop: 0
 --- !u!4 &1860005453
 Transform:
   m_ObjectHideFlags: 0

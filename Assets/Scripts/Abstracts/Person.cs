@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Person : MonoBehaviour, ILife, IPerson, IActive
+public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgressive
 {
     //стативные константы
     public const int MIN_HP=1;
@@ -9,26 +9,35 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive
     public const int MAX_ARM=10;
     public const int MIN_DP=1;
     public const int MAX_DP=22;
+    public const int MIN_EXP=1;
+    public const int MAX_EXP=6;
 
     //Эвенты, связанные с состоянием персонажа
     public delegate void Born(Person self, bool isPlayer);
     public static event Born BornEvent;
-    public delegate void Death(bool isPlayer);
+    public delegate void Changed(Person self, bool isPlayer);
+    public static event Changed ChangedEvent;
+    public delegate void Death(bool isPlayer, int Costs);
     public static event Death DeathEvent;
     //изменение характеричтик персонажа
-    public delegate void LostHP(int num,string team);
-    public static event LostHP LostHPEvent;
+    public delegate void Lost(int num,string team, string obj_name);
+    public static event Lost LostEvent;
+    public delegate void Reach(int num,string team, string obj_name);
+    public static event Reach ReachEvent;
+    public delegate void LevelUpped(int level,string team);
+    public static event LevelUpped LevelUppedEvent;
 
     private Animator anim;
 
     private void Awake()
     {
         numGenerator.answer_checked_event += find_target; //ловит проверку решения на верность
+        Person.DeathEvent += catch_kill;
     }
     private void OnDestroy()
     {
         numGenerator.answer_checked_event -= find_target;
-        UIController.RestartEvent -= die;
+        Person.DeathEvent -= catch_kill;
     }
     
     private void Start()
@@ -54,12 +63,17 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive
     }
     public void power_up(int hp_b, int arm_b, int dp_b)
     {
-        hp = Mathf.Clamp(hp+hp_b,MIN_HP,MAX_HP); 
+        max_hp = Mathf.Clamp(max_hp+hp_b,MIN_HP,MAX_HP);
+        this.HP += hp_b;
         armory = Mathf.Clamp(armory+arm_b,MIN_ARM,MAX_ARM); 
-        dp = Mathf.Clamp(dp+dp_b,MIN_DP,MAX_DP); 
+        dp = Mathf.Clamp(dp+dp_b,MIN_DP,MAX_DP);
+        ChangedEvent?.Invoke(this, tag=="Player");
     }
     public void borned(bool isPlayer)
     {
+        lvl = 1;
+        exp = 0;
+        Debug.Log(name+" "+lvl);
         BornEvent?.Invoke(this, isPlayer);
     }
 
@@ -69,14 +83,23 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive
     [SerializeField][Range(MIN_HP,MAX_HP)]private int hp;
     private int max_hp;
     [SerializeField][Range(MIN_ARM,MAX_ARM)]private int armory;
+    [SerializeField][Range(MIN_EXP,MAX_EXP)]private int cost;
 
     public int HP
     {
         get{return hp;}
         set
         {
-            for(int i=0;i<hp-value;i++)
-                LostHPEvent?.Invoke(hp-i,tag);
+            if(value<hp)
+            {
+                for(int i=0;i<hp-value;i++)
+                    LostEvent?.Invoke(hp-i,tag, "Heart");
+            }
+            else if(value>hp)
+            {
+                for(int i=0;i<value-hp;i++)
+                    ReachEvent?.Invoke(hp+i,tag, "Heart");
+            }
             hp=Mathf.Clamp(value,0,this.Max_HP);
             anim.SetTrigger("Take_Damage");
             if(hp<=0)
@@ -85,10 +108,11 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive
     }
     public int Max_HP{get{return max_hp;}}
     public int Armory{get{return armory;}}
+    public int Cost{get{return cost;}}
 
     public void die()
     {
-        DeathEvent?.Invoke(tag=="Player");
+        DeathEvent?.Invoke(tag=="Player", this.Cost);
         Destroy(anim);
         Destroy(gameObject);
         Destroy(this);
@@ -96,6 +120,11 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive
     public void take_damage(int damage)
     {
         this.HP=hp-Mathf.Clamp(damage-this.Armory,1,hp);
+    }
+    public void heal(int heal_points)
+    {
+        Debug.Log(name+" "+heal_points.ToString());
+        this.HP=hp+heal_points;
     }
     //IPerson
     [SerializeField][Range(MIN_DP,MAX_DP)]private int dp;
@@ -109,7 +138,62 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive
     {
         anim.SetTrigger("Attack");
         target.take_damage(this.DP);
+        if((int)GET==0)
+            Get_Exp(1);
+    }
+    public void catch_kill(bool isPlayer, int costs)
+    {
+        if((!isPlayer&&tag=="Player"||isPlayer&&tag=="Enemy")&&(int)GET==1)
+            Get_Exp(costs);
     }
     //IActive
     public virtual void find_target(bool ans)=>Debug.Log(ans);
+    //IProgressive
+    public int Level
+    {
+        get{return lvl;}
+    }
+    public int Add_Exp_PerLevel{get{return add_perlevel;}}
+    public int Exp_Need{get{return Mathf.Clamp(this.Add_Exp_PerLevel*this.Level,MIN_EXP,MAX_EXP);}}
+    public int Exp_Curr
+    {
+        set
+        {
+            if(value>=this.Exp_Need)
+            {
+                exp=0;
+                for(int i=1;i<=Exp_Need;i++)
+                    LostEvent?.Invoke(exp+i,tag,"Experience");
+                Level_Up();
+            }
+            else
+            {
+                for(int i=1;i<=value-exp;i++)
+                    ReachEvent?.Invoke(exp+i,tag,"Experience");
+                exp = value;
+            }
+        }
+    }
+    private enum get_experience_type
+    {
+        on_attack=0,
+        on_death=1,
+    }
+
+    [SerializeField][Tooltip("Количество опыта, необходимое для уровня(увеличивается для эту переменную каждый новый уровень)")]private int add_perlevel=3;
+    [SerializeField][Tooltip("Тип получения опыта")]private get_experience_type GET;
+    private int lvl;
+    private int exp;
+    public void Get_Exp(int xp)
+    {
+        Debug.Log(xp);
+        this.Exp_Curr=exp+xp;
+    }
+    public void Level_Up()
+    {
+        lvl+=1;
+        this.heal(this.Max_HP);
+        LevelUppedEvent?.Invoke(this.Level,tag);
+        ChangedEvent?.Invoke(this, tag=="Player");
+    }
 }

@@ -5,8 +5,8 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
-    public const int MIN_BALANCE=2;
-    public const int MAX_BALANCE=44;
+    public const int MIN_BALANCE=Person.MIN_HP+Person.MIN_ARM+Person.MIN_DP;
+    public const int MAX_BALANCE=Person.MAX_HP+Person.MAX_ARM+Person.MAX_DP;
 
     [SerializeField][Tooltip("Числа после запятой")]private int aft;
     [Space]//Игровые модельки
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
         }
         set
         {
-            balance_points=value;
+            balance_points=Mathf.Clamp(value,MIN_BALANCE,MAX_BALANCE);
             BalanceChangedEvent?.Invoke(balance_points);
         }
     }
@@ -50,8 +50,7 @@ public class GameManager : MonoBehaviour
     public static event BalanceChanged BalanceChangedEvent;
 
     private void Awake()
-    {
-        
+    {   
         if(SceneManager.GetActiveScene().buildIndex==0)
         {
             player_chars=new int[3];
@@ -70,15 +69,16 @@ public class GameManager : MonoBehaviour
             }
         }
         MenuController.ChangeCharsEvent += change_chars; 
-        numGenerator.answer_checked_event += delegate{timer=0;OnUserRequestEvent?.Invoke(min_range);};
+        numGenerator.answer_checked_event += check_answer;
         Person.DeathEvent += round_end;
         exampleGenerator.SubscribedEvent += initialize_game;
         exampleGenerator.SubscribedEvent += start_game; //начинает игру когда генератор примера находит менеджер
+        Person.LevelUppedEvent += upgrade;
     }
     private void OnDestroy()
     {
         MenuController.ChangeCharsEvent -= change_chars; 
-        numGenerator.answer_checked_event -= delegate{timer=0;OnUserRequestEvent?.Invoke(min_range);};
+        numGenerator.answer_checked_event -= check_answer;
         Person.DeathEvent -= round_end;
         exampleGenerator.SubscribedEvent -= initialize_game;
         exampleGenerator.SubscribedEvent -= start_game;
@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void round_end(bool isPlayer)
+    private void round_end(bool isPlayer, int n=0)
     {
         if(isPlayer)
         {
@@ -116,17 +116,13 @@ public class GameManager : MonoBehaviour
     {
         if(vessel.tag=="Player")
         {
-            Debug.Log("player");
             int sum=player_chars.Sum();
-            Debug.Log(sum);
             if(balance_points>=sum&&sum!=0)
             {
-                Debug.Log("Balance is exists");
                 vessel.GetComponent<Player>().copy(new Player(player_chars[0],player_chars[1],player_chars[2]));
             }
             else
             {
-                Debug.Log("Balance doesn't exists");
                 int[] new_chars=load_chars();
                 vessel.GetComponent<Player>().copy(new Player(new_chars[0],new_chars[1],new_chars[2]));
             }
@@ -204,5 +200,22 @@ public class GameManager : MonoBehaviour
         add_to_max = addit;
         max_ex_range = max_range;
         decide_time = timer;
+    }
+
+    private void use_personmodifier(Person_Modifier modifier)
+    {
+        Debug.Log(modifier.HP+" "+modifier.Arm+" "+modifier.DP);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Person>().power_up(modifier.HP,modifier.Arm,modifier.DP);
+        balance_points+=modifier.Cost;
+    }
+    private void upgrade(int level, string team)
+    {
+        Debug.Log(team+" reach "+level.ToString()+" level!");
+    }
+
+    private void check_answer(bool ans)
+    {
+        timer=0;
+        OnUserRequestEvent?.Invoke(min_range);
     }
 }

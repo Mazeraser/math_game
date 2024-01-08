@@ -9,6 +9,8 @@ public class UIController : MonoBehaviour
     [SerializeField][Tooltip("Префаб сердца")]private GameObject heart;
     [SerializeField][Tooltip("Префаб брони")]private GameObject shield;
     [SerializeField][Tooltip("Префаб атаки")]private GameObject attack;
+    [SerializeField][Tooltip("Префаб опыта")]private GameObject experience;
+    [SerializeField][Tooltip("Префаб уровня")]private GameObject level;
     //поля
     [SerializeField][Tooltip("Текст примеров")]private TMP_Text? example_ui;
     [SerializeField][Tooltip("Поле ввода")]private TMP_InputField? field_ui;
@@ -26,12 +28,16 @@ public class UIController : MonoBehaviour
     public delegate void Restart();
     public static event Restart RestartEvent;
 
+    public delegate void UseModifier(Person_Modifier mod);
+    public static event UseModifier UseModifierEvent;
+
     private void Awake()
     {
         exampleGenerator.example_generated_event += show_example;
         GameManager.TimerTurninEvent += set_timer;
         GameManager.DefeatEvent += active_menu;
         Person.BornEvent += init_person;
+        Person.ChangedEvent += init_person;
     }
     private void OnDestroy()
     {
@@ -39,6 +45,7 @@ public class UIController : MonoBehaviour
         GameManager.TimerTurninEvent -= set_timer;
         GameManager.DefeatEvent -= active_menu;
         Person.BornEvent -= init_person;
+        Person.ChangedEvent -= init_person;
     }
     private void Start()
     {
@@ -74,20 +81,22 @@ public class UIController : MonoBehaviour
         create_obj(ob.Max_HP,is_player,GameObject.Find((is_player?"player":"enemy")+"_hp"),heart);
         create_obj(ob.Armory,is_player,GameObject.Find((is_player?"player":"enemy")+"_shield"),shield);
         create_obj(ob.DP,is_player,GameObject.Find((is_player?"player":"enemy")+"_atk"),attack);
+        create_obj(ob.Exp_Need,is_player,GameObject.Find((is_player?"player":"enemy")+"_exp"),experience);
+        create_obj(ob.Level,is_player,GameObject.Find((is_player?"player":"enemy")+"_lvl"),level);
     }
-    public void create_obj(int hp, bool is_player, GameObject par, GameObject obj)
+    public void create_obj(int n, bool is_player, GameObject par, GameObject obj)
     {
         foreach(Transform child in par.transform) 
         {
             Destroy(child.gameObject);
         }
-        for(int i=0;i<hp;i++)
+        for(int i=0;i<n;i++)
         {
             GameObject clone = Instantiate(obj);
             clone.tag=is_player?"Player":"Enemy";
             clone.transform.SetParent(par.transform);
-            if(clone.name.Contains("Heart"))
-                clone.GetComponent<Heart>().number=i+1;
+            if(clone.GetComponent<Person_Resource>())
+                clone.GetComponent<Person_Resource>().number=i+1;
         }
     }
     public void delete_sym()
@@ -110,4 +119,5 @@ public class UIController : MonoBehaviour
     }
     public void exit()=>SceneManager.LoadScene(0);
     public void continue_func()=>active_menu(false);
+
 }
