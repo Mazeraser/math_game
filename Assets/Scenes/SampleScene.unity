@@ -7545,6 +7545,7 @@ RectTransform:
   - {fileID: 139216200}
   - {fileID: 89096888}
   - {fileID: 1976700541}
+  - {fileID: 1524226994}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7569,11 +7570,13 @@ MonoBehaviour:
   attack: {fileID: 972206041413475491, guid: 12d30eefc94059a4e9587562a12fa4b4, type: 3}
   experience: {fileID: 1939296501167984808, guid: 756e97ebec4f1ba49a7bc9f5e1e3cd44, type: 3}
   level: {fileID: 5879652756954734953, guid: d708a1fd831aa9942abe3cb349470ea5, type: 3}
+  ModifierIcon: {fileID: 3436051610843118652, guid: 8cce4c78429c2b049b577da696f18997, type: 3}
   example_ui: {fileID: 526901528}
   field_ui: {fileID: 1963373150}
   timer: {fileID: 1513833007}
   timer_text_ui: {fileID: 2071906446}
   game_menu: {fileID: 1976700540}
+  modifiers_panel: {fileID: 1524226993}
   continue_button: {fileID: 1135590774}
   text_menu: {fileID: 275718677}
 --- !u!1 &960361353
@@ -13004,6 +13007,106 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2208115032879172213, guid: 9ea6d6e4b72292544aa4408389ad605d, type: 3}
   m_PrefabInstance: {fileID: 775938427}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1524226993
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1524226994}
+  - component: {fileID: 1524226997}
+  - component: {fileID: 1524226996}
+  - component: {fileID: 1524226995}
+  m_Layer: 5
+  m_Name: modifiers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1524226994
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524226993}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 956370717}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.18373208, y: 0.19530208}
+  m_AnchorMax: {x: 0.81600004, y: 0.8043959}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1524226995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524226993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 200, y: 200}
+  m_Spacing: {x: 40, y: 40}
+  m_Constraint: 0
+  m_ConstraintCount: 2
+--- !u!114 &1524226996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524226993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.8627451}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1524226997
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524226993}
+  m_CullTransparentMesh: 1
 --- !u!1 &1531051530
 GameObject:
   m_ObjectHideFlags: 0
@@ -17299,7 +17402,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1963373151}
   m_TextViewport: {fileID: 1037340491}
   m_TextComponent: {fileID: 2023218699}

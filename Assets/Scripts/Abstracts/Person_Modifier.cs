@@ -15,4 +15,5 @@ public class Person_Modifier : Modifier
     public int HP{get{return chars[0];}}
     public int Arm{get{return chars[1];}}
     public int DP{get{return chars[2];}}
+    public int ARM_T{get{return (int)armory_type;}}
 }

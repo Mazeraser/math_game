@@ -8,7 +8,6 @@ public class Enemy : Person
     {
         if(!ans)
         {
-            Debug.Log("Wrong!>:(");
             Person? target = GameObject.FindGameObjectWithTag("Player").GetComponent<Person>();
             if(target!=null)
                 this.attack(target.GetComponent<ILife>());

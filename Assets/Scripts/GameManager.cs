@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField][Tooltip("Время на решение")]private float decide_time;
 
     private float timer;
+    private bool stop;
     [SerializeField][Tooltip("Очки баланса")]private int balance_points;
     [SerializeField][Tooltip("Характеристики персонажа\n1.ХП\n2.Броня\n3.Очки урона")]public int[] player_chars; //установка характеристик происходит вручную для тестов и перед началом игры
     public int Balance_Points
@@ -34,6 +35,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    [SerializeField][Tooltip("Все доступные модификаторы")]private Person_Modifier[] modifiers;
+    [SerializeField][Tooltip("Использованные модификаторы")]private List<Person_Modifier> used_modifiers;
+    [SerializeField][Range(0,6)][Tooltip("Количество модификаторов при выборе")]private int modifiers_count;
+
     //запрос на генерацию примера
     public delegate void OnUserRequest(int num);
     public static event OnUserRequest OnUserRequestEvent;
@@ -48,6 +53,9 @@ public class GameManager : MonoBehaviour
     //Изменился баланс
     public delegate void BalanceChanged(int points);
     public static event BalanceChanged BalanceChangedEvent;
+    //Отбор модификаторов
+    public delegate void ModifierChoosed(Person_Modifier modifier);
+    public static event ModifierChoosed ModifierChoosedEvent;
 
     private void Awake()
     {   
@@ -71,22 +79,29 @@ public class GameManager : MonoBehaviour
         MenuController.ChangeCharsEvent += change_chars; 
         numGenerator.answer_checked_event += check_answer;
         Person.DeathEvent += round_end;
+        Person.GetModifierEvent += upgrade;
         exampleGenerator.SubscribedEvent += initialize_game;
         exampleGenerator.SubscribedEvent += start_game; //начинает игру когда генератор примера находит менеджер
-        Person.LevelUppedEvent += upgrade;
+        ModifierIconController.ChoosedEvent += download_mod;
     }
     private void OnDestroy()
     {
         MenuController.ChangeCharsEvent -= change_chars; 
         numGenerator.answer_checked_event -= check_answer;
         Person.DeathEvent -= round_end;
+        Person.GetModifierEvent -= upgrade;
         exampleGenerator.SubscribedEvent -= initialize_game;
         exampleGenerator.SubscribedEvent -= start_game;
+        ModifierIconController.ChoosedEvent -= download_mod;
     }
     private void Update()
     {
-        //таймер
-        timer += Time.deltaTime;
+        if(!stop)
+        {
+            //таймер
+            timer += Time.deltaTime;
+             
+        }
         TimerTurninEvent?.Invoke(Mathf.Lerp(0.0f,1.0f,(decide_time-timer)/decide_time),Mathf.Round((decide_time-timer)*Mathf.Pow(10,aft))/Mathf.Pow(10,aft));
         if(timer>=decide_time)
         {
@@ -146,22 +161,25 @@ public class GameManager : MonoBehaviour
             switch(Random.Range(0,3))
             {
                 case 0:
-                    gen=Random.Range(Person.MIN_HP,Mathf.Clamp(Person.MAX_HP,Person.MIN_HP,points)+1);
+                    gen=Random.Range(0,Mathf.Clamp(Person.MAX_HP-hp,0,points)+1);
                     hp+=gen;
                     points-=gen; 
                     break;
                 case 1:
-                    gen=Random.Range(Person.MIN_ARM,Mathf.Clamp(Person.MAX_ARM,Person.MIN_ARM,points)+1);
+                    gen=Random.Range(0,Mathf.Clamp(Person.MAX_ARM-arm,0,points)+1);
                     arm+=gen;
                     points-=gen; 
                     break;
                 case 2:
-                    gen=Random.Range(Person.MIN_DP,Mathf.Clamp(Person.MAX_DP,Person.MIN_DP,points)+1);
+                    gen=Random.Range(0,Mathf.Clamp(Person.MAX_DP-dp,0,points)+1);
                     dp+=gen;
                     points-=gen; 
                     break;
             }
         }
+        Debug.Log("HP: "+hp.ToString());
+        Debug.Log("ARM: "+arm.ToString());
+        Debug.Log("DP: "+dp.ToString());
         return new int[3]{hp,arm,dp};
     }
     private void change_chars(int char_ind, int val)
@@ -190,6 +208,8 @@ public class GameManager : MonoBehaviour
         create_person(enemies[Random.Range(0,enemies.Length)]);//создается только в первый раз потому что после смерти сразу создается новый противник
         create_person(players[Random.Range(0,enemies.Length)]);
         OnUserRequestEvent?.Invoke(min_range);
+        modifiers=modifiers.Concat(used_modifiers.ToArray()).ToArray();
+        used_modifiers=new List<Person_Modifier>();
         timer = 0;
     }
 
@@ -204,18 +224,62 @@ public class GameManager : MonoBehaviour
 
     private void use_personmodifier(Person_Modifier modifier)
     {
-        Debug.Log(modifier.HP+" "+modifier.Arm+" "+modifier.DP);
-        GameObject.FindGameObjectWithTag("Player").GetComponent<Person>().power_up(modifier.HP,modifier.Arm,modifier.DP);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Person>().power_up(modifier.HP,modifier.Arm,modifier.DP, modifier.ARM_T);
         balance_points+=modifier.Cost;
     }
     private void upgrade(int level, string team)
     {
-        Debug.Log(team+" reach "+level.ToString()+" level!");
+        if(modifiers.Length>0&&modifiers_count>0&&team=="Player")
+        {
+            stop=true;
+            timer=0;
+            Person_Modifier[] selected = new Person_Modifier[modifiers_count];
+            for(int i=0;i<selected.Length;i++)
+            {
+                selected[i]=choose_modifier(level,selected);
+                Debug.Log(selected[i].name);
+                if(selected[i].name.Length>0)
+                    ModifierChoosedEvent?.Invoke(selected[i]);
+                else
+                    break;            
+            }
+        }
     }
 
     private void check_answer(bool ans)
     {
         timer=0;
         OnUserRequestEvent?.Invoke(min_range);
+    }
+
+    private Person_Modifier choose_modifier(int act, Person_Modifier[] arr)
+    {
+        Person_Modifier res=new Person_Modifier();
+        res.actuality=1000;
+        foreach(Person_Modifier mod in modifiers)
+        {
+            if((Mathf.Abs(mod.actuality-act)<Mathf.Abs(res.actuality-act)||Mathf.Abs(mod.actuality-act)==Mathf.Abs(res.actuality-act)&&Random.Range(0,2)==0)&&!arr.Contains(mod))
+            {
+                bool flag=true;
+                foreach(Modifier parent in mod.parents)
+                {
+                    if(!used_modifiers.Contains(parent))
+                    {
+                        flag=false;
+                        break;
+                    }
+                }
+                if(flag)
+                    res=mod;
+            }
+        }
+        return res;
+    }
+    private void download_mod(Person_Modifier modifier)
+    {
+        use_personmodifier(modifier);
+        modifiers = modifiers.Where(elem => elem!=modifier).ToArray();
+        used_modifiers.Add(modifier);
+        stop = false;
     }
 }

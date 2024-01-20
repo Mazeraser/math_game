@@ -25,7 +25,7 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
     public delegate void Reach(int num,string team, string obj_name);
     public static event Reach ReachEvent;
     public delegate void LevelUpped(int level,string team);
-    public static event LevelUpped LevelUppedEvent;
+    public static event LevelUpped GetModifierEvent;
 
     private Animator anim;
 
@@ -61,7 +61,7 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
         armory = obj.Armory;
         dp = obj.DP;
     }
-    public void power_up(int hp_b, int arm_b, int dp_b)
+    public void power_up(int hp_b, int arm_b, int dp_b, int arm_t)
     {
         max_hp = Mathf.Clamp(max_hp+hp_b,MIN_HP,MAX_HP);
         this.HP += hp_b;
@@ -73,7 +73,6 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
     {
         lvl = 1;
         exp = 0;
-        Debug.Log(name+" "+lvl);
         BornEvent?.Invoke(this, isPlayer);
     }
 
@@ -123,7 +122,6 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
     }
     public void heal(int heal_points)
     {
-        Debug.Log(name+" "+heal_points.ToString());
         this.HP=hp+heal_points;
     }
     //IPerson
@@ -174,6 +172,13 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
             }
         }
     }
+    public int Get_Modifier_Level
+    {
+        get
+        {
+            return get_modifier_level;
+        }
+    }
     private enum get_experience_type
     {
         on_attack=0,
@@ -182,18 +187,19 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
 
     [SerializeField][Tooltip("Количество опыта, необходимое для уровня(увеличивается для эту переменную каждый новый уровень)")]private int add_perlevel=3;
     [SerializeField][Tooltip("Тип получения опыта")]private get_experience_type GET;
+    [SerializeField][Tooltip("Уровень для получения модификатора")][Range(1,8)]private int get_modifier_level;
     private int lvl;
     private int exp;
     public void Get_Exp(int xp)
     {
-        Debug.Log(xp);
         this.Exp_Curr=exp+xp;
     }
     public void Level_Up()
     {
         lvl+=1;
         this.heal(this.Max_HP);
-        LevelUppedEvent?.Invoke(this.Level,tag);
         ChangedEvent?.Invoke(this, tag=="Player");
+        if(lvl%get_modifier_level==0)
+            GetModifierEvent?.Invoke(this.Level,tag);
     }
 }

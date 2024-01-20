@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2208115032879172213}
   - component: {fileID: 4207413240621612063}
   - component: {fileID: 6268393373161308935}
+  - component: {fileID: 1110164163018540263}
   m_Layer: 5
   m_Name: Shield
   m_TagString: Untagged
@@ -28,9 +29,9 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -75,3 +76,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1110164163018540263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3713938110594317929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55e638dccf21397489a1ecb89fcfb76e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: {fileID: 0}
+  not_active: {fileID: 0}
+  number: 0

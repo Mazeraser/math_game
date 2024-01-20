@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 2
   m_EditorClassIdentifier: 
   icon: {fileID: 0}
-  description: 
+  description: Gives 1 unit for each characteristic
   parents: []
-  actuality: 0
+  actuality: 2
   armory_type: 0
-  chars: 010000000200000003000000
+  chars: 010000000100000001000000

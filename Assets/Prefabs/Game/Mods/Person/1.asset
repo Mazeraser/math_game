@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 1
   m_EditorClassIdentifier: 
   icon: {fileID: 0}
-  description: 
+  description: Gives two points of armor
   parents: []
-  actuality: 0
+  actuality: 4
   armory_type: 0
-  chars: 030000000200000001000000
+  chars: 000000000200000000000000

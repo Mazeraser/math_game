@@ -52,6 +52,7 @@ MonoBehaviour:
   dp: 5
   add_perlevel: 1
   GET: 1
+  get_modifier_level: 2
 --- !u!95 &5078309556674319159
 Animator:
   serializedVersion: 5

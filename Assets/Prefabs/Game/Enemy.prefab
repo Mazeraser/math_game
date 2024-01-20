@@ -48,10 +48,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 4
   armory: 3
-  cost: 1
+  cost: 2
   dp: 3
   add_perlevel: 2
   GET: 0
+  get_modifier_level: 1
 --- !u!95 &8506038915149495606
 Animator:
   serializedVersion: 5

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83258c20276bd434490cf0bf92b08c32, type: 3}
+  m_Name: 10
+  m_EditorClassIdentifier: 
+  icon: {fileID: 0}
+  description: Gives 1 unit of XP, three of armor, one point of damage
+  parents:
+  - {fileID: 11400000, guid: 3be2332085f9816478d43ecabe16f540, type: 2}
+  actuality: 6
+  armory_type: 0
+  chars: 010000000300000001000000
