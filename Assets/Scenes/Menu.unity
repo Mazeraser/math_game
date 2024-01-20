@@ -6554,12 +6554,7 @@ MonoBehaviour:
   decide_time: 0
   balance_points: 10
   player_chars: 
-  modifiers:
-  - {fileID: 11400000, guid: 82f35e65d21519645a94bd88921493f7, type: 2}
-  - {fileID: 11400000, guid: 96fa82a92bb22d44c9f56ba037a5a14a, type: 2}
-  - {fileID: 11400000, guid: 3be2332085f9816478d43ecabe16f540, type: 2}
-  - {fileID: 11400000, guid: 2fe1fb4e24a241448963b680f8aba5d3, type: 2}
-  - {fileID: 11400000, guid: b5d8dc0fa7ff8b24d81410254099bb5b, type: 2}
+  modifiers: []
   used_modifiers: []
   modifiers_count: 2
 --- !u!4 &1860005453

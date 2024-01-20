@@ -43,6 +43,7 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
     private void Start()
     {
         max_hp = hp;
+        time_armory = 0;
         borned(tag=="Player");
         anim = GetComponent<Animator>();
     }
@@ -65,7 +66,10 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
     {
         max_hp = Mathf.Clamp(max_hp+hp_b,MIN_HP,MAX_HP);
         this.HP += hp_b;
-        armory = Mathf.Clamp(armory+arm_b,MIN_ARM,MAX_ARM); 
+        if(arm_t==0)
+            armory = Mathf.Clamp(armory+arm_b,MIN_ARM,MAX_ARM-time_armory); 
+        else if(arm_t==1)
+            this.Time_Armory =  Mathf.Clamp(time_armory+arm_b,MIN_ARM,MAX_ARM-armory);
         dp = Mathf.Clamp(dp+dp_b,MIN_DP,MAX_DP);
         ChangedEvent?.Invoke(this, tag=="Player");
     }
@@ -82,6 +86,7 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
     [SerializeField][Range(MIN_HP,MAX_HP)]private int hp;
     private int max_hp;
     [SerializeField][Range(MIN_ARM,MAX_ARM)]private int armory;
+    private int time_armory;
     [SerializeField][Range(MIN_EXP,MAX_EXP)]private int cost;
 
     public int HP
@@ -107,6 +112,24 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
     }
     public int Max_HP{get{return max_hp;}}
     public int Armory{get{return armory;}}
+    public int Time_Armory
+    {
+        get{return time_armory;}
+        set{
+            if(value<time_armory)
+            {
+                for(int i=0;i<time_armory-value;i++)
+                    LostEvent?.Invoke(time_armory-i,tag, "Time_Armory");
+            }
+            else if(value>time_armory)
+            {
+                for(int i=0;i<value-time_armory;i++)
+                    ReachEvent?.Invoke(time_armory+i,tag, "Time_Armory");
+            }
+            time_armory=Mathf.Clamp(value,0,MAX_ARM-armory);
+            Debug.Log(time_armory);
+        }
+    }
     public int Cost{get{return cost;}}
 
     public void die()
@@ -118,7 +141,14 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
     }
     public void take_damage(int damage)
     {
-        this.HP=hp-Mathf.Clamp(damage-this.Armory,1,hp);
+        if(damage<=this.Time_Armory)
+            this.Time_Armory-=Mathf.Clamp(damage-this.Armory,0,this.Time_Armory);
+        else
+        {
+            damage=Mathf.Clamp(damage-this.Time_Armory+this.Armory,MIN_DP,MAX_DP);
+            this.Time_Armory=0;
+            this.HP=hp-Mathf.Clamp(damage-this.Armory,1,hp);
+        }
     }
     public void heal(int heal_points)
     {

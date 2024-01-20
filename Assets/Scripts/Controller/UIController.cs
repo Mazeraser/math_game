@@ -9,6 +9,7 @@ public class UIController : MonoBehaviour
     //объекты интерфейса
     [SerializeField][Tooltip("Префаб сердца")]private GameObject heart;
     [SerializeField][Tooltip("Префаб брони")]private GameObject shield;
+    [SerializeField][Tooltip("Префаб временной брони")]private GameObject time_shield;
     [SerializeField][Tooltip("Префаб атаки")]private GameObject attack;
     [SerializeField][Tooltip("Префаб опыта")]private GameObject experience;
     [SerializeField][Tooltip("Префаб уровня")]private GameObject level;
@@ -122,6 +123,7 @@ public class UIController : MonoBehaviour
     public void init_person(Person ob, bool is_player){
         create_obj(ob.Max_HP,is_player,GameObject.Find((is_player?"player":"enemy")+"_hp"),heart);
         create_obj(ob.Armory,is_player,GameObject.Find((is_player?"player":"enemy")+"_shield"),shield);
+        create_obj(ob.Time_Armory,is_player,GameObject.Find((is_player?"player":"enemy")+"_timeshield"),time_shield);
         create_obj(ob.DP,is_player,GameObject.Find((is_player?"player":"enemy")+"_atk"),attack);
         create_obj(ob.Exp_Need,is_player,GameObject.Find((is_player?"player":"enemy")+"_exp"),experience);
         create_obj(ob.Level,is_player,GameObject.Find((is_player?"player":"enemy")+"_lvl"),level);
