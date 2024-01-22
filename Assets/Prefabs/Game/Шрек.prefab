@@ -53,6 +53,8 @@ MonoBehaviour:
   add_perlevel: 1
   GET: 1
   get_modifier_level: 1
+  description: OMG  cat!!
+  icon: {fileID: 5976432539072177495, guid: a42fcb655d35a5246bc2d2a3a23b9da6, type: 3}
 --- !u!95 &5078309556674319159
 Animator:
   serializedVersion: 5

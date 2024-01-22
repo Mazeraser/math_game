@@ -35,6 +35,9 @@ public class UIController : MonoBehaviour
     public delegate void UseModifier(Person_Modifier mod);
     public static event UseModifier UseModifierEvent;
 
+    public delegate void MenuConditionChanged(bool cond);
+    public static event MenuConditionChanged MenuConditionChangedEvent;
+
     private void Awake()
     {
         exampleGenerator.example_generated_event += show_example;
@@ -154,6 +157,7 @@ public class UIController : MonoBehaviour
         menu_condition = cond;
         text_menu.text = label_menu;
         game_menu.SetActive(menu_condition);
+        MenuConditionChangedEvent?.Invoke(menu_condition);
     }
     public void restart()
     {

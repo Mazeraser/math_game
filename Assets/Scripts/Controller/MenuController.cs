@@ -9,6 +9,8 @@ public class MenuController : MonoBehaviour
 {
     public delegate void Change_Chars(int char_ind, int val);
     public static event Change_Chars ChangeCharsEvent;
+    public delegate void Change_Player_Ind(int inv_val);
+    public static event Change_Player_Ind Change_Player_Ind_Event;
 
     [Tooltip("Меню")]private GameObject? menu;
     [Tooltip("Выбор сложности")]private GameObject? difficulty_menu;
@@ -188,4 +190,5 @@ public class MenuController : MonoBehaviour
     public void change_balance(int val) => GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().Balance_Points+=val;
     public void up_char(int char_index) => ChangeCharsEvent?.Invoke(char_index, 1);
     public void down_char(int char_index) => ChangeCharsEvent?.Invoke(char_index, -1);
+    public void change_player(int ind_val) => Change_Player_Ind_Event?.Invoke(ind_val);
 }

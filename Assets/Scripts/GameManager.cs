@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     [Space]//Игровые модельки
     [SerializeField][Tooltip("Префабы противников")]private GameObject[] enemies;
     [SerializeField][Tooltip("Префабы игроков")]private GameObject[] players;
+    [SerializeField][Tooltip("Выбранный персонаж")]private GameObject selected_player;
+    private int player_index;
     [Space]//Настройки игры
     [SerializeField][Tooltip("Нижняя граница")]private int min_range;//нижняя граница задается в менеджере для увеличения сложности
     [SerializeField][Tooltip("Максимальная длина примера")]private int max_ex_range;
@@ -19,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField][Tooltip("Время на решение")]private float decide_time;
 
     private float timer;
+    private bool prev_stop;
     private bool stop;
     [SerializeField][Tooltip("Очки баланса")]private int balance_points;
     [SerializeField][Tooltip("Характеристики персонажа\n1.ХП\n2.Броня\n3.Очки урона")]public int[] player_chars; //установка характеристик происходит вручную для тестов и перед началом игры
@@ -56,6 +59,9 @@ public class GameManager : MonoBehaviour
     //Отбор модификаторов
     public delegate void ModifierChoosed(Person_Modifier modifier);
     public static event ModifierChoosed ModifierChoosedEvent;
+    //Выбран персонаж
+    public delegate void CharacterSelected(Player character);
+    public static event CharacterSelected CharacterSelectedEvent;
 
     private void Awake()
     {   
@@ -76,17 +82,23 @@ public class GameManager : MonoBehaviour
                 DontDestroyOnLoad(gameObject); 
             }
         }
-        MenuController.ChangeCharsEvent += change_chars; 
+        MenuController.ChangeCharsEvent += change_chars;
+        MenuController.Change_Player_Ind_Event += select_person;
         numGenerator.answer_checked_event += check_answer;
         Person.DeathEvent += round_end;
         Person.GetModifierEvent += upgrade;
         exampleGenerator.SubscribedEvent += initialize_game;
         exampleGenerator.SubscribedEvent += start_game; //начинает игру когда генератор примера находит менеджер
         ModifierIconController.ChoosedEvent += download_mod;
+        UIController.MenuConditionChangedEvent += set_stop;
+
+        player_index=0;
+        select_person(0);
     }
     private void OnDestroy()
     {
         MenuController.ChangeCharsEvent -= change_chars; 
+        MenuController.Change_Player_Ind_Event -= select_person;
         numGenerator.answer_checked_event -= check_answer;
         Person.DeathEvent -= round_end;
         Person.GetModifierEvent -= upgrade;
@@ -206,7 +218,7 @@ public class GameManager : MonoBehaviour
     private void start_game()
     {
         create_person(enemies[Random.Range(0,enemies.Length)]);//создается только в первый раз потому что после смерти сразу создается новый противник
-        create_person(players[Random.Range(0,enemies.Length)]);
+        create_person(selected_player);
         OnUserRequestEvent?.Invoke(min_range);
         modifiers=modifiers.Concat(used_modifiers.ToArray()).ToArray();
         used_modifiers=new List<Person_Modifier>();
@@ -281,5 +293,24 @@ public class GameManager : MonoBehaviour
         modifiers = modifiers.Where(elem => elem!=modifier).ToArray();
         used_modifiers.Add(modifier);
         stop = false;
+    }
+    public void select_person(int ind_val)
+    {
+        player_index=Mathf.Clamp(player_index+ind_val,0,players.Length-1);
+        selected_player=players[player_index];
+        CharacterSelectedEvent?.Invoke(selected_player.GetComponent<Player>());
+    }
+    private void set_stop(bool condition)
+    {
+        if(condition)
+        {
+            prev_stop = stop;
+            stop = true;
+        }
+        else
+        {
+            OnUserRequestEvent?.Invoke(min_range);
+            stop = prev_stop;
+        }
     }
 }

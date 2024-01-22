@@ -127,7 +127,6 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
                     ReachEvent?.Invoke(time_armory+i,tag, "Time_Armory");
             }
             time_armory=Mathf.Clamp(value,0,MAX_ARM-armory);
-            Debug.Log(time_armory);
         }
     }
     public int Cost{get{return cost;}}
