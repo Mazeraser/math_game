@@ -4,7 +4,7 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName="New modifier",menuName="Modifiers/Core modifier")]
 public abstract class Modifier : ScriptableObject
 {
-    [Tooltip("Иконка")]public Image icon;
+    [Tooltip("Иконка")]public Sprite icon;
     [Tooltip("Описание")]public string description;
     [Space]
     [Tooltip("Родительские модификаторы")]public Modifier[] parents;

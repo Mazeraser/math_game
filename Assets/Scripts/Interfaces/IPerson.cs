@@ -4,4 +4,5 @@ public interface IPerson
     int DP{get;set;}
     void attack(ILife target);
     void catch_kill(bool isPlayer, int costs);
+    void activate_perks(int on_attack);
 }

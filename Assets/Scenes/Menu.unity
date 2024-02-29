@@ -1141,8 +1141,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -10}
+  m_SizeDelta: {x: 0, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &216665635
 MonoBehaviour:
@@ -5315,9 +5315,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f67498cad6c4a0948b188b6aae79eb18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  min: 20
-  add_to_min: 130
-  max_ex_range: 5
+  min: 1
+  add_to_min: 9
+  max_ex_range: 3
   time: 15
 --- !u!114 &1178196551
 MonoBehaviour:
@@ -7413,17 +7413,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aft: 1
   enemies:
-  - {fileID: 8506038915149495603, guid: f72d8e1465169e74d8a59dd443b7d4c3, type: 3}
+  - {fileID: 8506038915149495603, guid: 6c49c9bf2630b204d8b79fababc5db28, type: 3}
+  - {fileID: 8506038915149495603, guid: cab754e56b06e8340b0bf957f9eb9da8, type: 3}
+  - {fileID: 8506038915149495603, guid: edf668fdc428ef542947df76ce6a1b4e, type: 3}
+  - {fileID: 8506038915149495603, guid: 85050a953692a7f42a4a51fb6a449ef5, type: 3}
+  - {fileID: 8506038915149495603, guid: 5bb5b1e9a6f9f544791f088ac648494a, type: 3}
+  - {fileID: 8506038915149495603, guid: 1ea1e860390defe43860f378aed4f2e7, type: 3}
   players:
-  - {fileID: 5078309556674319155, guid: 23d03f4b643072b44b01d553c06475ae, type: 3}
+  - {fileID: 5078309556674319155, guid: 7c4146707e3a3774a9f492c3f689dcce, type: 3}
+  - {fileID: 5078309556674319155, guid: 6dab988d8b9dac14082de9da70a19d66, type: 3}
+  - {fileID: 5078309556674319155, guid: f8ae8327514d62f4792036fa99cedd19, type: 3}
   selected_player: {fileID: 0}
   min_range: 0
   max_ex_range: 0
   add_to_max: 0
   decide_time: 0
-  balance_points: 10
+  balance_points: 2
   player_chars: 
-  modifiers: []
+  modifiers:
+  - {fileID: 11400000, guid: 4753ea4590ce1c34e934da456717e01e, type: 2}
+  - {fileID: 11400000, guid: 0fa52eebfb456f14da1ff9ce9acfe8a0, type: 2}
+  - {fileID: 11400000, guid: 5a00d255d87c5344b9f27c5705da5e58, type: 2}
+  - {fileID: 11400000, guid: b6bf5acfa125555419428ad48f0f719f, type: 2}
+  - {fileID: 11400000, guid: d4ef2a46fba5d8344a6e6d235dcdc582, type: 2}
+  - {fileID: 11400000, guid: 59892eba5398a894fb4dae7e72d1d2e1, type: 2}
+  - {fileID: 11400000, guid: 2d0136ba063cb66459312dce31825039, type: 2}
+  - {fileID: 11400000, guid: 1ef7758494c627f45aa712d7e0be07f2, type: 2}
+  - {fileID: 11400000, guid: beb5cc58fadd15646b5bf5d9bac7f971, type: 2}
+  - {fileID: 11400000, guid: 7631ba239d9b16a459aec30170b5037b, type: 2}
+  - {fileID: 11400000, guid: 0980311d3d6e3cd4ca11fbc863773157, type: 2}
   used_modifiers: []
   modifiers_count: 2
 --- !u!4 &1860005453

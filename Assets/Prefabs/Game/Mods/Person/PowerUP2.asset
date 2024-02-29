@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83258c20276bd434490cf0bf92b08c32, type: 3}
+  m_Name: PowerUP2
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: c6ea7d68b5f2934408cb3b748191418c, type: 3}
+  description: +3 DP, +2 shield
+  parents:
+  - {fileID: 11400000, guid: 4753ea4590ce1c34e934da456717e01e, type: 2}
+  actuality: 5
+  armory_type: 0
+  chars: 030000000200000000000000
+  id: 0

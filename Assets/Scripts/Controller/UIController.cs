@@ -133,17 +133,20 @@ public class UIController : MonoBehaviour
     }
     public void create_obj(int n, bool is_player, GameObject par, GameObject obj)
     {
-        foreach(Transform child in par.transform) 
+        if((n!=par.transform.childCount&&is_player)||!is_player)
         {
-            Destroy(child.gameObject);
-        }
-        for(int i=0;i<n;i++)
-        {
-            GameObject clone = Instantiate(obj);
-            clone.tag=is_player?"Player":"Enemy";
-            clone.transform.SetParent(par.transform);
-            if(clone.GetComponent<Person_Resource>())
-                clone.GetComponent<Person_Resource>().number=i+1;
+            foreach(Transform child in par.transform) 
+            {
+                Destroy(child.gameObject);
+            }
+            for(int i=0;i<n;i++)
+            {
+                GameObject clone = Instantiate(obj);
+                clone.tag=is_player?"Player":"Enemy";
+                clone.transform.SetParent(par.transform);
+                if(clone.GetComponent<Person_Resource>())
+                    clone.GetComponent<Person_Resource>().number=i+1;
+            }
         }
     }
     public void delete_sym()

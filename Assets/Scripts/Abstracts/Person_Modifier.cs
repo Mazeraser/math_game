@@ -16,4 +16,12 @@ public class Person_Modifier : Modifier
     public int Arm{get{return chars[1];}}
     public int DP{get{return chars[2];}}
     public int ARM_T{get{return (int)armory_type;}}
+
+    [SerializeField]private int id;
+    public int ID
+    {
+        get{
+            return id;
+        }
+    }
 }

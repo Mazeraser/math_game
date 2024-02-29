@@ -102,7 +102,7 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
             else if(value>hp)
             {
                 for(int i=0;i<value-hp;i++)
-                    ReachEvent?.Invoke(hp+i,tag, "Heart");
+                    ReachEvent?.Invoke(hp+i+1,tag, "Heart");
             }
             hp=Mathf.Clamp(value,0,this.Max_HP);
             anim.SetTrigger("Take_Damage");
@@ -161,17 +161,72 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
         set{dp=value;}
     }
 
+    [SerializeField]private Perk[] perks;
+
     public void attack(ILife target)
     {
         anim.SetTrigger("Attack");
         target.take_damage(this.DP);
         if((int)GET==0)
             Get_Exp(1);
+        activate_perks(1);
     }
     public void catch_kill(bool isPlayer, int costs)
     {
         if((!isPlayer&&tag=="Player"||isPlayer&&tag=="Enemy")&&(int)GET==1)
+        {
             Get_Exp(costs);
+            activate_perks(0);
+        }
+    }
+    public void activate_perks(int on_attack)
+    {
+        foreach(Perk curr_perk in perks)
+        {
+            if(on_attack==curr_perk.Type)
+            {
+                switch(curr_perk.ID)
+                {
+                    case 12:
+                        if(Random.Range(0,2)!=0)
+                            break;
+                        else
+                            goto case 0;
+                    case 13:
+                        if(Random.Range(0,3)!=0)
+                            break;
+                        else
+                            goto case 0;
+                    case 15:
+                        if(Random.Range(0,5)!=0)
+                            break;
+                        else
+                            goto case 0;
+                    case 2:
+                        if(Random.Range(0,10)!=0)
+                        {
+                            int r = Random.Range(0,2);
+                            power_up(1-r,r,0,0);
+                        }
+                        break;
+                    case 3:
+                        if(Random.Range(0,10)!=0)
+                        {
+                            power_up(0,0,1,0);
+                        }
+                        break;
+                    case 0:
+                        if(curr_perk.HP>0)
+                            heal(curr_perk.HP);
+                        if(curr_perk.ARM>0)
+                            power_up(0,curr_perk.ARM,0,1);
+                        if(curr_perk.EXP>0)
+                            Get_Exp(curr_perk.EXP);
+                        break;
+                }
+                        
+            }
+        }
     }
     //IActive
     public virtual void find_target(bool ans)=>Debug.Log(ans);
@@ -226,7 +281,7 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
     public void Level_Up()
     {
         lvl+=1;
-        this.heal(this.Max_HP);
+        //this.heal(this.Max_HP);
         ChangedEvent?.Invoke(this, tag=="Player");
         if(lvl%get_modifier_level==0)
             GetModifierEvent?.Invoke(this.Level,tag);

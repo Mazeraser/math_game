@@ -236,7 +236,10 @@ public class GameManager : MonoBehaviour
 
     private void use_personmodifier(Person_Modifier modifier)
     {
-        GameObject.FindGameObjectWithTag("Player").GetComponent<Person>().power_up(modifier.HP,modifier.Arm,modifier.DP, modifier.ARM_T);
+        Person player = GameObject.FindGameObjectWithTag("Player").GetComponent<Person>();
+        player.power_up(modifier.HP,modifier.Arm,modifier.DP, modifier.ARM_T);
+        if(modifier.ID==1)
+            player.heal(player.Max_HP);
         balance_points+=modifier.Cost;
     }
     private void upgrade(int level, string team)
@@ -296,7 +299,13 @@ public class GameManager : MonoBehaviour
     }
     public void select_person(int ind_val)
     {
-        player_index=Mathf.Clamp(player_index+ind_val,0,players.Length-1);
+        if(player_index+ind_val>players.Length-1)
+            player_index=0;
+        else if(player_index+ind_val<0)
+            player_index=players.Length-1;
+        else
+            player_index=player_index+ind_val;
+
         selected_player=players[player_index];
         CharacterSelectedEvent?.Invoke(selected_player.GetComponent<Player>());
     }

@@ -37,7 +37,10 @@ public class exampleGenerator : MonoBehaviour, IGenerator
                 res.Add(i);
             }
         }
-        return res.ToArray();
+        if(res.Count>0)
+            return res.ToArray();
+        else
+            return new int[1]{1};
     }
     private bool isSimple(int num){
         List<int> res = new List<int>();
@@ -50,6 +53,7 @@ public class exampleGenerator : MonoBehaviour, IGenerator
     }
     public void Generate(int num)
     {
+        Debug.Log(num);
         int beg_num = num;
         string res = "";
         int?[] multiplier = new int?[max_range];
