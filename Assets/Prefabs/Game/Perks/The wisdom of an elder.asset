@@ -15,3 +15,5 @@ MonoBehaviour:
   type: 1
   chars: 000000000300000000000000
   unique_id: 15
+  description: has a 10% chance of getting 3 temporary shields
+  icon: {fileID: 0}

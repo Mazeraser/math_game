@@ -15,3 +15,5 @@ MonoBehaviour:
   type: 1
   chars: 000000000200000000000000
   unique_id: 13
+  description: for each attack there is a 34% chance of getting 2 temporary shields
+  icon: {fileID: 21300000, guid: 48205f3a703a65246a12733fc27a5f3e, type: 3}

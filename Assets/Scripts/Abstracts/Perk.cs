@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName="new Perk", menuName="Perk")]
 public class Perk : ScriptableObject
@@ -40,5 +41,11 @@ public class Perk : ScriptableObject
     public string Description
     {
         get{return description;}
+    }
+
+    [SerializeField]private Sprite icon;
+    public Sprite Icon
+    {
+        get{return icon;}
     }
 }

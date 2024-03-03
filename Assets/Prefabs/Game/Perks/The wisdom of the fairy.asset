@@ -15,3 +15,5 @@ MonoBehaviour:
   type: 1
   chars: 000000000000000002000000
   unique_id: 12
+  description: Each attack has a 50% chance of gaining 2 experience points.
+  icon: {fileID: 0}

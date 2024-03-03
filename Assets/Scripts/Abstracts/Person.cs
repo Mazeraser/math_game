@@ -162,6 +162,13 @@ public abstract class Person : MonoBehaviour, ILife, IPerson, IActive, IProgress
     }
 
     [SerializeField]private Perk[] perks;
+    public Perk[] get_perks
+    {
+        get
+        {
+            return perks;
+        }
+    }
 
     public void attack(ILife target)
     {
